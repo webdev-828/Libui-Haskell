@@ -1,0 +1,354 @@
+name:                libui
+version:             0.1.0.0
+synopsis: Bindings to the libui C library
+description: Full bindings and OSX extensions to the libui C library. The
+             packaged version of this library might not work properly yet.
+             Please refer to the GitHub project page.
+homepage:            https://github.com/beijaflor-io/haskell-libui
+license:             GPL-3
+license-file:        LICENSE
+author:              Pedro Tacla Yamada
+maintainer:          tacla.yamada@gmail.com
+category:            Graphics
+build-type:          Simple
+cabal-version:       >= 1.10
+extra-tmp-files:
+  ./vendor/libui/ui.h
+  ./vendor/libui/uipriv.h
+  ./vendor/libui/common/uipriv.h
+  if os(darwin)
+    ./vendor/libui/darwin/uipriv_darwin.h
+  if os(linux)
+    ./vendor/libui/unix/uipriv_unix.h
+
+library
+  -- ld-options: -Wl,-rpath,'$ORIGIN'
+  -- ghc-options: -optl-Wl,-rpath,'$ORIGIN'"
+  if os(darwin)
+    frameworks: Foundation CoreFoundation AppKit Cocoa WebKit MapKit
+  if os(linux)
+    extra-libraries: gtk-3 glib-2.0 gdk-3 pango-1.0 gobject-2.0 pangocairo-1.0 cairo X11
+    include-dirs:
+        /usr/lib/x86_64-linux-gnu/
+        /usr/lib/x86_64-linux-gnu/glib-2.0/include/
+        /usr/lib64/glib-2.0/include/
+        /usr/include/glib-2.0/
+        /usr/include/cairo/
+        /usr/include/pango-1.0/
+        /usr/include/atk-1.0/
+        /usr/include/gtk-3.0/
+        /usr/include/gdk-pixbuf-2.0/
+        /usr/include/gdk-pixbuf-2.0/gdk-pix/
+        ./vendor/libui/unix/
+        ./vendor/libui/unix/
+  -- extra-libraries: ui
+  -- extra-lib-dirs: /Users/yamadapc/program/github.com/beijaflor-io/haskell-libui/vendor/libui/build/out/
+  include-dirs: . ./vendor/libui/ ./vendor/libui/common/ ./vendor/libui/darwin/
+
+  includes:
+      ui.h
+      uipriv.h
+  install-includes:
+      ui.h
+      uipriv.h
+
+  if os(linux)
+    install-includes:
+      ui_unix.h
+      uipriv_unix.h
+
+  if os(darwin)
+    install-includes:
+      ui_darwin.h
+      uipriv_darwin.h
+
+  c-sources:
+      ./vendor/libui/common/areaevents.c
+      ./vendor/libui/common/control.c
+      ./vendor/libui/common/debug.c
+      ./vendor/libui/common/matrix.c
+      ./vendor/libui/common/shouldquit.c
+      ./vendor/libui/common/userbugs.c
+  if os(linux)
+    c-sources:
+      ./vendor/libui/unix/alloc.c
+      ./vendor/libui/unix/area.c
+      ./vendor/libui/unix/box.c
+      ./vendor/libui/unix/button.c
+      ./vendor/libui/unix/checkbox.c
+      ./vendor/libui/unix/child.c
+      ./vendor/libui/unix/colorbutton.c
+      ./vendor/libui/unix/combobox.c
+      ./vendor/libui/unix/control.c
+      ./vendor/libui/unix/datetimepicker.c
+      ./vendor/libui/unix/debug.c
+      ./vendor/libui/unix/draw.c
+      ./vendor/libui/unix/draw.h
+      ./vendor/libui/unix/drawmatrix.c
+      ./vendor/libui/unix/drawpath.c
+      ./vendor/libui/unix/drawtext.c
+      ./vendor/libui/unix/editablecombo.c
+      ./vendor/libui/unix/entry.c
+      ./vendor/libui/unix/fontbutton.c
+      ./vendor/libui/unix/form.c
+      ./vendor/libui/unix/graphemes.c
+      ./vendor/libui/unix/grid.c
+      ./vendor/libui/unix/group.c
+      ./vendor/libui/unix/label.c
+      ./vendor/libui/unix/main.c
+      ./vendor/libui/unix/menu.c
+      ./vendor/libui/unix/multilineentry.c
+      ./vendor/libui/unix/progressbar.c
+      ./vendor/libui/unix/radiobuttons.c
+      ./vendor/libui/unix/separator.c
+      ./vendor/libui/unix/slider.c
+      ./vendor/libui/unix/spinbox.c
+      ./vendor/libui/unix/stddialogs.c
+      ./vendor/libui/unix/tab.c
+      ./vendor/libui/unix/text.c
+      ./vendor/libui/unix/util.c
+      ./vendor/libui/unix/window.c
+  if os(darwin)
+    c-sources:
+      ./cbits/mapview.m
+
+      ./vendor/libui/darwin/alloc.m
+      ./vendor/libui/darwin/area.m
+      ./vendor/libui/darwin/areaevents.m
+      ./vendor/libui/darwin/autolayout.m
+      ./vendor/libui/darwin/box.m
+      ./vendor/libui/darwin/button.m
+      ./vendor/libui/darwin/checkbox.m
+      ./vendor/libui/darwin/colorbutton.m
+      ./vendor/libui/darwin/combobox.m
+      ./vendor/libui/darwin/control.m
+      ./vendor/libui/darwin/datetimepicker.m
+      ./vendor/libui/darwin/debug.m
+      ./vendor/libui/darwin/draw.m
+      ./vendor/libui/darwin/drawtext.m
+      ./vendor/libui/darwin/editablecombo.m
+      ./vendor/libui/darwin/entry.m
+      ./vendor/libui/darwin/fontbutton.m
+      ./vendor/libui/darwin/form.m
+      ./vendor/libui/darwin/grid.m
+      ./vendor/libui/darwin/group.m
+      ./vendor/libui/darwin/label.m
+      ./vendor/libui/darwin/main.m
+      ./vendor/libui/darwin/map.m
+      ./vendor/libui/darwin/menu.m
+      ./vendor/libui/darwin/multilineentry.m
+      ./vendor/libui/darwin/progressbar.m
+      ./vendor/libui/darwin/radiobuttons.m
+      ./vendor/libui/darwin/scrollview.m
+      ./vendor/libui/darwin/separator.m
+      ./vendor/libui/darwin/slider.m
+      ./vendor/libui/darwin/spinbox.m
+      ./vendor/libui/darwin/stddialogs.m
+      ./vendor/libui/darwin/tab.m
+      ./vendor/libui/darwin/text.m
+      ./vendor/libui/darwin/util.m
+      ./vendor/libui/darwin/webview.m
+      ./vendor/libui/darwin/window.m
+      ./vendor/libui/darwin/winmoveresize.m
+  build-depends: async
+               , base >=4.8 && <5
+               , c-storable-deriving
+               , data-default
+               , free
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  exposed-modules: Graphics.LibUI
+                 , Graphics.LibUI.OSX
+
+                 , Graphics.LibUI.FFI
+                 , Graphics.LibUI.FFI.Raw
+                 , Graphics.LibUI.FFI.Raw.OSX
+                 , Graphics.LibUI.FFI.Wrapped
+                 , Graphics.LibUI.FFI.Wrapped.OSX
+
+                 , Graphics.LibUI.Types
+                 , Graphics.LibUI.MonadUI
+  other-modules: System.Info.Class
+               , System.Info.Class.TH
+  hs-source-dirs:
+      src
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-simple-progressbar-example
+  main-is: SimpleProgressBar.lhs
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-simple-counter-example
+  main-is: SimpleCounter.hs
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-simple-control-gallery
+  main-is: SimpleControlGallery.hs
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-simple-webview
+  main-is: SimpleWebview.hs
+  if os(darwin)
+    buildable: True
+  else
+    buildable: False
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-simple-mapview
+  main-is: SimpleMapview.hs
+  if os(darwin)
+    buildable: True
+  else
+    buildable: False
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-types-control-gallery
+  main-is: ControlGallery.hs
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-reactive-banana-control-gallery
+  main-is: ReactiveBananaControlGallery.hs
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+executable libui-reactive-banana-click-to-resize
+  main-is: ReactiveBananaClickToResize.hs
+  hs-source-dirs:
+      examples
+  build-depends: async
+               , base
+               , c-storable-deriving
+               , data-default
+               , free
+               , libui
+               , monad-loops
+               , mtl
+               , reactive-banana
+               , template-haskell
+               , time
+               , transformers
+  default-language: Haskell2010
+  ghc-options: -threaded
+
+test-suite hspec
+  main-is: Spec.hs
+  type: exitcode-stdio-1.0
+  build-depends: QuickCheck
+               , base
+               , c-storable-deriving
+               , free
+               , hspec
+               , monad-loops
+               , reactive-banana
+               , template-haskell
+  hs-source-dirs: test
+  default-language: Haskell2010
